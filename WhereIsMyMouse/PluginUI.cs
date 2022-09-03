@@ -17,9 +17,9 @@ namespace WhereIsMyMouse
 
         private bool CursorOn = false;
 
-        private float size = 10;
+        private float size = 15;
 
-        private float thickness = 5;
+        private float thickness = 2;
 
         private Vector4 color = new Vector4(1, 0, 0, 1);
         
