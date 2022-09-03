@@ -42,8 +42,6 @@ namespace WhereIsMyMouse
 
         public void Draw()
         {
-
-
             DrawMainWindow();
             CursorAura();
         }
@@ -81,17 +79,17 @@ namespace WhereIsMyMouse
 
             ImGui.SetNextWindowSize(new Vector2(375, 330), ImGuiCond.FirstUseEver);
             ImGui.SetNextWindowSizeConstraints(new Vector2(375, 330), new Vector2(float.MaxValue, float.MaxValue));
-            if (ImGui.Begin("Where's my mouse settings", ref this.visible, ImGuiWindowFlags.NoScrollbar | ImGuiWindowFlags.NoScrollWithMouse))
+            if (ImGui.Begin("Cursor Settings", ref this.visible, ImGuiWindowFlags.NoScrollbar | ImGuiWindowFlags.NoScrollWithMouse))
             {
                 ImGui.Text("Cursor Aura : ");
                 ImGui.SameLine();
                 ImGui.Checkbox("###CursorAura", ref this.CursorOn);
                 ImGui.Text("Circle Size : ");
                 ImGui.SameLine();
-                ImGui.SliderFloat("###sizeslide", ref this.size, 0f, 130);
+                ImGui.SliderFloat("###sizeslide", ref this.size, 0f, 100f);
                 ImGui.Text("Thickness : ");
                 ImGui.SameLine();
-                ImGui.SliderFloat("###thickslide", ref this.thickness, 0f, 100f);
+                ImGui.SliderFloat("###thickslide", ref this.thickness, 0f, 50f);
                 ImGui.ColorPicker4("###ColorPicker", ref this.color);
             }
             ImGui.End();

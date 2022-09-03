@@ -1,10 +1,10 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <Authors></Authors>
+    <Authors>Marethyu</Authors>
     <Company></Company>
     <Version>0.0.0.1</Version>
-    <Description>A sample plugin.</Description>
+    <Description>Never lose track of your mouse again</Description>
     <Copyright></Copyright>
     <PackageProjectUrl>https://github.com/Pythyu/WhereIsMyMouse</PackageProjectUrl>
     <RootNamespace>WhereIsMyMouse</RootNamespace>
