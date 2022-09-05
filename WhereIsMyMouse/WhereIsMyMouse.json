@@ -2,7 +2,7 @@
   "Author": "Marethyu",
   "Name": "Where's my mouse",
   "Punchline": "Allows you to not lose track of your mouse on the screen",
-  "Description": "Add UI element on top of the mouse like circle to keep track of your mouse location during gameplay",
+  "Description": "Add UI element on top of the mouse like circle to keep track of your mouse location during gameplay.\nOpen settings with /wmm",
   "InternalName": "WhereIsMyMouse",
   "ApplicableVersion": "any",
   "Tags": [
