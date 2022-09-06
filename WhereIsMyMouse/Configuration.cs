@@ -1,6 +1,7 @@
 ﻿using Dalamud.Configuration;
 using Dalamud.Plugin;
 using System;
+using System.Numerics;
 
 namespace WhereIsMyMouse
 {
@@ -9,7 +10,13 @@ namespace WhereIsMyMouse
     {
         public int Version { get; set; } = 0;
 
-        public bool SomePropertyToBeSavedAndWithADefault { get; set; } = true;
+        public bool CursorOn = false;
+
+        public float Size = 15;
+
+        public float Thickness = 2;
+
+        public Vector4 Color = new Vector4(1, 0, 0, 1);
 
         // the below exist just to make saving less cumbersome
 
