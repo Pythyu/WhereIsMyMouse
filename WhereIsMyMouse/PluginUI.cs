@@ -29,11 +29,12 @@ namespace WhereIsMyMouse
             set { this.visible = value; }
         }
         
-
-        // passing in the image here just for simplicity
         public PluginUI(Configuration configuration)
         {
             this.configuration = configuration;
+            this.thickness = this.configuration.Thickness;
+            this.color = this.configuration.Color;
+            this.size = this.configuration.Size;
         }
 
         public void Dispose()
@@ -68,6 +69,14 @@ namespace WhereIsMyMouse
             draw.AddCircle(cursorPos, size, this.ToUint(this.color), 0, this.thickness);
             ImGui.End();
         }
+
+        public void SaveSettings()
+        {
+            this.configuration.Color = this.color;
+            this.configuration.Size = this.size;
+            this.configuration.Thickness = this.thickness;
+            this.configuration.CursorOn = this.CursorOn;
+        }
         
 
         public void DrawMainWindow()
@@ -77,7 +86,7 @@ namespace WhereIsMyMouse
                 return;
             }
 
-            ImGui.SetNextWindowSize(new Vector2(375, 330), ImGuiCond.FirstUseEver);
+            ImGui.SetNextWindowSize(new Vector2(375, 400), ImGuiCond.Appearing);
             ImGui.SetNextWindowSizeConstraints(new Vector2(375, 330), new Vector2(float.MaxValue, float.MaxValue));
             if (ImGui.Begin("Cursor Settings", ref this.visible, ImGuiWindowFlags.NoScrollbar | ImGuiWindowFlags.NoScrollWithMouse))
             {
@@ -91,6 +100,10 @@ namespace WhereIsMyMouse
                 ImGui.SameLine();
                 ImGui.SliderFloat("###thickslide", ref this.thickness, 0f, 50f);
                 ImGui.ColorPicker4("###ColorPicker", ref this.color);
+                if (ImGui.Button("Save Settings"))
+                {
+                    SaveSettings();
+                }
             }
             ImGui.End();
         }

@@ -40,6 +40,7 @@ namespace WhereIsMyMouse
         public void Dispose()
         {
             this.PluginUi.Dispose();
+            this.PluginInterface.UiBuilder.Draw -= DrawUI;
             this.CommandManager.RemoveHandler(commandName);
         }
 
