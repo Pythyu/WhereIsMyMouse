@@ -3,6 +3,7 @@ using System;
 using System.Drawing;
 using System.Numerics;
 using Dalamud.Logging;
+using Dalamud.Plugin;
 
 namespace WhereIsMyMouse
 {
@@ -11,6 +12,8 @@ namespace WhereIsMyMouse
     class PluginUI : IDisposable
     {
         private Configuration configuration;
+        
+        private DalamudPluginInterface wmmInterface;
 
         // this extra bool exists for ImGui, since you can't ref a property
         private bool visible = false;
@@ -29,12 +32,14 @@ namespace WhereIsMyMouse
             set { this.visible = value; }
         }
         
-        public PluginUI(Configuration configuration)
+        public PluginUI(Configuration configuration, DalamudPluginInterface wmmInterface)
         {
             this.configuration = configuration;
+            this.wmmInterface = wmmInterface;
             this.thickness = this.configuration.Thickness;
             this.color = this.configuration.Color;
             this.size = this.configuration.Size;
+            this.CursorOn = this.configuration.CursorOn;
         }
 
         public void Dispose()
@@ -76,6 +81,7 @@ namespace WhereIsMyMouse
             this.configuration.Size = this.size;
             this.configuration.Thickness = this.thickness;
             this.configuration.CursorOn = this.CursorOn;
+            wmmInterface.SavePluginConfig(this.configuration);
         }
         
 
@@ -86,7 +92,7 @@ namespace WhereIsMyMouse
                 return;
             }
 
-            ImGui.SetNextWindowSize(new Vector2(375, 400), ImGuiCond.Appearing);
+            ImGui.SetNextWindowSize(new Vector2(375, 450), ImGuiCond.Appearing);
             ImGui.SetNextWindowSizeConstraints(new Vector2(375, 330), new Vector2(float.MaxValue, float.MaxValue));
             if (ImGui.Begin("Cursor Settings", ref this.visible, ImGuiWindowFlags.NoScrollbar | ImGuiWindowFlags.NoScrollWithMouse))
             {

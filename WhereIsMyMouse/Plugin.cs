@@ -27,7 +27,7 @@ namespace WhereIsMyMouse
             this.Configuration = this.PluginInterface.GetPluginConfig() as Configuration ?? new Configuration();
             this.Configuration.Initialize(this.PluginInterface);
             
-            this.PluginUi = new PluginUI(this.Configuration);
+            this.PluginUi = new PluginUI(this.Configuration, this.PluginInterface);
 
             this.CommandManager.AddHandler(commandName, new CommandInfo(OnCommand)
             {
@@ -39,9 +39,11 @@ namespace WhereIsMyMouse
 
         public void Dispose()
         {
-            this.PluginUi.Dispose();
+            // Save config
+            PluginInterface.SavePluginConfig(this.Configuration);
             this.PluginInterface.UiBuilder.Draw -= DrawUI;
             this.CommandManager.RemoveHandler(commandName);
+            this.PluginUi.Dispose();
         }
 
         private void OnCommand(string command, string args)
