@@ -71,6 +71,7 @@ namespace WhereIsMyMouse
 
             Vector2 cursorPos = ImGui.GetMousePos();
             ImGui.SetNextWindowSize(new Vector2(300, 300));
+            ImGuiHelpers.ForceNextWindowMainViewport();
             ImGui.Begin("CursorWindow", ImGuiWindowFlags.NoBackground | ImGuiWindowFlags.NoDecoration | ImGuiWindowFlags.NoInputs);
             ImGui.SetWindowPos(cursorPos - new Vector2(150,150));
             
@@ -98,7 +99,6 @@ namespace WhereIsMyMouse
             {
                 return;
             }
-            ImGuiHelpers.ForceNextWindowMainViewport();
             ImGui.SetNextWindowSize(new Vector2(375, 500), ImGuiCond.Appearing);
             ImGui.SetNextWindowSizeConstraints(new Vector2(375, 330), new Vector2(float.MaxValue, float.MaxValue));
             if (ImGui.Begin("Cursor Settings", ref this.visible, ImGuiWindowFlags.NoScrollbar | ImGuiWindowFlags.NoScrollWithMouse))
