@@ -2,6 +2,7 @@
 using System;
 using System.Drawing;
 using System.Numerics;
+using Dalamud.Interface;
 using Dalamud.Logging;
 
 namespace WhereIsMyMouse
@@ -77,6 +78,7 @@ namespace WhereIsMyMouse
                 return;
             }
 
+            ImGuiHelpers.ForceNextWindowMainViewport();
             ImGui.SetNextWindowSize(new Vector2(375, 330), ImGuiCond.FirstUseEver);
             ImGui.SetNextWindowSizeConstraints(new Vector2(375, 330), new Vector2(float.MaxValue, float.MaxValue));
             if (ImGui.Begin("Cursor Settings", ref this.visible, ImGuiWindowFlags.NoScrollbar | ImGuiWindowFlags.NoScrollWithMouse))
