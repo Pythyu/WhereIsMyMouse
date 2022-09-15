@@ -64,7 +64,7 @@ namespace WhereIsMyMouse
             ImGui.Begin("CursorWindow", ImGuiWindowFlags.NoBackground | ImGuiWindowFlags.NoDecoration | ImGuiWindowFlags.NoInputs);
             ImGui.SetWindowPos(cursorPos - new Vector2(150,150));
 
-            var draw = ImGui.GetWindowDrawList();
+            var draw = ImGui.GetForegroundDrawList();
             draw.AddCircle(cursorPos, size, this.ToUint(this.color), 0, this.thickness);
             ImGui.End();
         }
