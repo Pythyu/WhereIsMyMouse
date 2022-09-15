@@ -12,6 +12,8 @@ namespace WhereIsMyMouse
 
         public bool CursorOn = false;
 
+        public bool ForegroundCursor = false;
+
         public float Size = 15;
 
         public float Thickness = 2;
