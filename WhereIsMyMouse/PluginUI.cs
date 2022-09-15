@@ -3,6 +3,7 @@ using System;
 using System.Drawing;
 using System.Numerics;
 using Dalamud.Logging;
+using Dalamud.Interface;
 using Dalamud.Plugin;
 
 namespace WhereIsMyMouse
@@ -19,6 +20,8 @@ namespace WhereIsMyMouse
         private bool visible = false;
 
         private bool CursorOn = false;
+
+        private bool ForegroundCursor = false;
 
         private float size = 15;
 
@@ -40,6 +43,7 @@ namespace WhereIsMyMouse
             this.color = this.configuration.Color;
             this.size = this.configuration.Size;
             this.CursorOn = this.configuration.CursorOn;
+            this.ForegroundCursor = this.configuration.ForegroundCursor;
         }
 
         public void Dispose()
@@ -69,8 +73,10 @@ namespace WhereIsMyMouse
             ImGui.SetNextWindowSize(new Vector2(300, 300));
             ImGui.Begin("CursorWindow", ImGuiWindowFlags.NoBackground | ImGuiWindowFlags.NoDecoration | ImGuiWindowFlags.NoInputs);
             ImGui.SetWindowPos(cursorPos - new Vector2(150,150));
-
-            var draw = ImGui.GetForegroundDrawList();
+            
+            ImDrawListPtr draw;
+            draw = this.ForegroundCursor ? ImGui.GetForegroundDrawList() : ImGui.GetWindowDrawList();
+            
             draw.AddCircle(cursorPos, size, this.ToUint(this.color), 0, this.thickness);
             ImGui.End();
         }
@@ -81,6 +87,7 @@ namespace WhereIsMyMouse
             this.configuration.Size = this.size;
             this.configuration.Thickness = this.thickness;
             this.configuration.CursorOn = this.CursorOn;
+            this.configuration.ForegroundCursor = this.ForegroundCursor;
             wmmInterface.SavePluginConfig(this.configuration);
         }
         
@@ -91,14 +98,17 @@ namespace WhereIsMyMouse
             {
                 return;
             }
-
-            ImGui.SetNextWindowSize(new Vector2(375, 450), ImGuiCond.Appearing);
+            ImGuiHelpers.ForceNextWindowMainViewport();
+            ImGui.SetNextWindowSize(new Vector2(375, 500), ImGuiCond.Appearing);
             ImGui.SetNextWindowSizeConstraints(new Vector2(375, 330), new Vector2(float.MaxValue, float.MaxValue));
             if (ImGui.Begin("Cursor Settings", ref this.visible, ImGuiWindowFlags.NoScrollbar | ImGuiWindowFlags.NoScrollWithMouse))
             {
                 ImGui.Text("Cursor Aura : ");
                 ImGui.SameLine();
                 ImGui.Checkbox("###CursorAura", ref this.CursorOn);
+                ImGui.Text("Circle drawn in foreground : ");
+                ImGui.SameLine();
+                ImGui.Checkbox("###ForegroundCursor", ref this.ForegroundCursor);
                 ImGui.Text("Circle Size : ");
                 ImGui.SameLine();
                 ImGui.SliderFloat("###sizeslide", ref this.size, 0f, 100f);
