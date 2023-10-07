@@ -4,6 +4,7 @@ using System.Drawing;
 using System.Numerics;
 using Dalamud.Logging;
 using Dalamud.Interface;
+using Dalamud.Interface.Utility;
 using Dalamud.Plugin;
 
 namespace WhereIsMyMouse
