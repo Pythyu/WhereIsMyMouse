@@ -17,18 +17,21 @@ namespace WhereIsMyMouse
         private ICommandManager CommandManager { get; init; }
         private Configuration Configuration { get; init; }
         private PluginUI PluginUi { get; init; }
+        private ICondition Condition { get; init;  }
 
         public Plugin(
             [RequiredVersion("1.0")] DalamudPluginInterface pluginInterface,
-            [RequiredVersion("1.0")] ICommandManager commandManager)
+            [RequiredVersion("1.0")] ICommandManager commandManager,
+            [RequiredVersion("1.0")] ICondition condition)
         {
             this.PluginInterface = pluginInterface;
             this.CommandManager = commandManager;
+            this.Condition = condition;
 
             this.Configuration = this.PluginInterface.GetPluginConfig() as Configuration ?? new Configuration();
             this.Configuration.Initialize(this.PluginInterface);
             
-            this.PluginUi = new PluginUI(this.Configuration, this.PluginInterface);
+            this.PluginUi = new PluginUI(this.Configuration, this.PluginInterface, this.Condition);
 
             this.CommandManager.AddHandler(commandName, new CommandInfo(OnCommand)
             {
