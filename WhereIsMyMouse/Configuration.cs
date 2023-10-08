@@ -13,6 +13,8 @@ namespace WhereIsMyMouse
         public bool CursorOn = false;
 
         public bool ForegroundCursor = false;
+        
+        public bool EnableInCombatOnly = false;
 
         public float Size = 15;
 

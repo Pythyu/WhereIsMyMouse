@@ -2,10 +2,19 @@
 using System;
 using System.Drawing;
 using System.Numerics;
+using Dalamud.Game.ClientState.Conditions;
+using Dalamud.Game.ClientState.Objects.SubKinds;
 using Dalamud.Logging;
 using Dalamud.Interface;
 using Dalamud.Interface.Utility;
+using Dalamud.IoC;
 using Dalamud.Plugin;
+using Dalamud.Plugin.Services;
+using FFXIVClientStructs.FFXIV.Client.Game.UI;
+using FFXIVClientStructs.Interop.Attributes;
+using Lumina;
+using Character = Dalamud.Game.ClientState.Objects.Types.Character;
+using StructsCharacter = FFXIVClientStructs.FFXIV.Client.Game.Character.Character;
 
 namespace WhereIsMyMouse
 {
@@ -24,11 +33,16 @@ namespace WhereIsMyMouse
 
         private bool ForegroundCursor = false;
 
+        private bool EnableInCombatOnly = false;
+
         private float size = 15;
 
         private float thickness = 2;
 
         private Vector4 color = new Vector4(1, 0, 0, 1);
+
+        [PluginService]
+        private ICondition condition { get; init;  }
         
         public bool Visible
         {
@@ -45,6 +59,7 @@ namespace WhereIsMyMouse
             this.size = this.configuration.Size;
             this.CursorOn = this.configuration.CursorOn;
             this.ForegroundCursor = this.configuration.ForegroundCursor;
+            this.EnableInCombatOnly = this.configuration.EnableInCombatOnly;
         }
 
         public void Dispose()
@@ -70,6 +85,16 @@ namespace WhereIsMyMouse
                 return;
             }
 
+            if (EnableInCombatOnly)
+            {
+                if (!condition[ConditionFlag.InCombat])
+                {
+                    return;
+                }
+            }
+
+
+
             Vector2 cursorPos = ImGui.GetMousePos();
             ImGui.SetNextWindowSize(new Vector2(300, 300));
             ImGuiHelpers.ForceNextWindowMainViewport();
@@ -90,6 +115,7 @@ namespace WhereIsMyMouse
             this.configuration.Thickness = this.thickness;
             this.configuration.CursorOn = this.CursorOn;
             this.configuration.ForegroundCursor = this.ForegroundCursor;
+            this.configuration.EnableInCombatOnly = this.EnableInCombatOnly;
             wmmInterface.SavePluginConfig(this.configuration);
         }
         
@@ -117,6 +143,9 @@ namespace WhereIsMyMouse
                 ImGui.SameLine();
                 ImGui.SliderFloat("###thickslide", ref this.thickness, 0f, 50f);
                 ImGui.ColorPicker4("###ColorPicker", ref this.color);
+                ImGui.Text("Enable only in combat : ");
+                ImGui.SameLine();
+                ImGui.Checkbox("###CombatOnlyEnable", ref this.EnableInCombatOnly);
                 if (ImGui.Button("Save Settings"))
                 {
                     SaveSettings();
