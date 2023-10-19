@@ -66,6 +66,7 @@ namespace WhereIsMyMouse
             this.CursorOn = this.configuration.CursorOn;
             this.ForegroundCursor = this.configuration.ForegroundCursor;
             this.EnableInCombatOnly = this.configuration.EnableInCombatOnly;
+            this.Rainbow = this.configuration.Rainbow;
         }
 
         public void Dispose()
@@ -130,6 +131,7 @@ namespace WhereIsMyMouse
             this.configuration.CursorOn = this.CursorOn;
             this.configuration.ForegroundCursor = this.ForegroundCursor;
             this.configuration.EnableInCombatOnly = this.EnableInCombatOnly;
+            this.configuration.Rainbow = this.Rainbow;
             wmmInterface.SavePluginConfig(this.configuration);
         }
         

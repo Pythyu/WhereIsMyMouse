@@ -16,6 +16,8 @@ namespace WhereIsMyMouse
         
         public bool EnableInCombatOnly = false;
 
+        public bool Rainbow = false;
+
         public float Size = 15;
 
         public float Thickness = 2;
