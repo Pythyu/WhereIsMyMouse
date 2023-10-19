@@ -15,7 +15,6 @@ using FFXIVClientStructs.Interop.Attributes;
 using Lumina;
 using Character = Dalamud.Game.ClientState.Objects.Types.Character;
 using StructsCharacter = FFXIVClientStructs.FFXIV.Client.Game.Character.Character;
-using System.Runtime.InteropServices;
 
 namespace WhereIsMyMouse
 {
@@ -106,7 +105,6 @@ namespace WhereIsMyMouse
                 color.X = outr;
                 color.Y = outg;
                 color.Z = outb;
-                Console.WriteLine(color.ToString());
             }
 
             Vector2 cursorPos = ImGui.GetMousePos();
