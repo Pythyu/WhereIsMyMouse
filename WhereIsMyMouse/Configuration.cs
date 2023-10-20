@@ -16,9 +16,13 @@ namespace WhereIsMyMouse
         
         public bool EnableInCombatOnly = false;
 
+        public bool Rainbow = false;
+
         public float Size = 15;
 
         public float Thickness = 2;
+
+        public float CycleSpeed = 0.005f;
 
         public Vector4 Color = new Vector4(1, 0, 0, 1);
 

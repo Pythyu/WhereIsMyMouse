@@ -35,11 +35,16 @@ namespace WhereIsMyMouse
 
         private bool EnableInCombatOnly = false;
 
+        private bool Rainbow = false;
+
         private float size = 15;
 
         private float thickness = 2;
 
+        private float cycleSpeed = 0.005f;
+
         private Vector4 color = new Vector4(1, 0, 0, 1);
+ 
         private ICondition condition { get; init;  }
         
         public bool Visible
@@ -56,9 +61,11 @@ namespace WhereIsMyMouse
             this.thickness = this.configuration.Thickness;
             this.color = this.configuration.Color;
             this.size = this.configuration.Size;
+            this.cycleSpeed = this.configuration.CycleSpeed;
             this.CursorOn = this.configuration.CursorOn;
             this.ForegroundCursor = this.configuration.ForegroundCursor;
             this.EnableInCombatOnly = this.configuration.EnableInCombatOnly;
+            this.Rainbow = this.configuration.Rainbow;
         }
 
         public void Dispose()
@@ -69,12 +76,6 @@ namespace WhereIsMyMouse
         {
             DrawMainWindow();
             CursorAura();
-        }
-        
-        private uint ToUint(Vector4 c)
-        {
-            uint total = ((uint)(c.W*255) << 24) + ((uint)(c.Z*255) << 16) + ((uint)(c.Y*255) << 8) + (uint)(c.X*255);
-            return total;
         }
 
         public void CursorAura()
@@ -92,7 +93,19 @@ namespace WhereIsMyMouse
                 }
             }
 
-
+            if (Rainbow)
+            {
+                ImGui.ColorConvertRGBtoHSV(color.X, color.Y, color.Z, out float h, out float s, out float v);
+                if (h >= 1)
+                {
+                    h = 0;
+                }
+                h += cycleSpeed;
+                ImGui.ColorConvertHSVtoRGB(h, s, v, out float outr, out float outg, out float outb);
+                color.X = outr;
+                color.Y = outg;
+                color.Z = outb;
+            }
 
             Vector2 cursorPos = ImGui.GetMousePos();
             ImGui.SetNextWindowSize(new Vector2(300, 300));
@@ -103,7 +116,7 @@ namespace WhereIsMyMouse
             ImDrawListPtr draw;
             draw = this.ForegroundCursor ? ImGui.GetForegroundDrawList() : ImGui.GetWindowDrawList();
             
-            draw.AddCircle(cursorPos, size, this.ToUint(this.color), 0, this.thickness);
+            draw.AddCircle(cursorPos, size, ImGui.ColorConvertFloat4ToU32(this.color), 0, this.thickness);
             ImGui.End();
         }
 
@@ -112,9 +125,11 @@ namespace WhereIsMyMouse
             this.configuration.Color = this.color;
             this.configuration.Size = this.size;
             this.configuration.Thickness = this.thickness;
+            this.configuration.CycleSpeed = this.cycleSpeed;
             this.configuration.CursorOn = this.CursorOn;
             this.configuration.ForegroundCursor = this.ForegroundCursor;
             this.configuration.EnableInCombatOnly = this.EnableInCombatOnly;
+            this.configuration.Rainbow = this.Rainbow;
             wmmInterface.SavePluginConfig(this.configuration);
         }
         
@@ -125,7 +140,7 @@ namespace WhereIsMyMouse
             {
                 return;
             }
-            ImGui.SetNextWindowSize(new Vector2(375, 500), ImGuiCond.Appearing);
+            ImGui.SetNextWindowSize(new Vector2(375, 600), ImGuiCond.Appearing);
             ImGui.SetNextWindowSizeConstraints(new Vector2(375, 330), new Vector2(float.MaxValue, float.MaxValue));
             if (ImGui.Begin("Cursor Settings", ref this.visible, ImGuiWindowFlags.NoScrollbar | ImGuiWindowFlags.NoScrollWithMouse))
             {
@@ -145,6 +160,11 @@ namespace WhereIsMyMouse
                 ImGui.Text("Enable only in combat : ");
                 ImGui.SameLine();
                 ImGui.Checkbox("###CombatOnlyEnable", ref this.EnableInCombatOnly);
+                ImGui.Text("Rainbow : ");
+                ImGui.SameLine();
+                ImGui.Checkbox("###Rainbow", ref this.Rainbow);
+                ImGui.Text("Rainbow Cycle Speed : ");
+                ImGui.SliderFloat("###cyclespeedslide", ref this.cycleSpeed, 0.001f, 0.015f);
                 if (ImGui.Button("Save Settings"))
                 {
                     SaveSettings();
