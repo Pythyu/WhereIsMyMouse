@@ -41,7 +41,7 @@ namespace WhereIsMyMouse
 
         private float thickness = 2;
 
-        private float cycleSpeed = 0.005f;
+        private float cycleSpeed = 0.10f;
 
         private Vector4 color = new Vector4(1, 0, 0, 1);
  
@@ -100,7 +100,7 @@ namespace WhereIsMyMouse
                 {
                     h = 0;
                 }
-                h += cycleSpeed;
+                h += cycleSpeed * ImGui.GetIO().DeltaTime;
                 ImGui.ColorConvertHSVtoRGB(h, s, v, out float outr, out float outg, out float outb);
                 color.X = outr;
                 color.Y = outg;
@@ -164,7 +164,7 @@ namespace WhereIsMyMouse
                 ImGui.SameLine();
                 ImGui.Checkbox("###Rainbow", ref this.Rainbow);
                 ImGui.Text("Rainbow Cycle Speed : ");
-                ImGui.SliderFloat("###cyclespeedslide", ref this.cycleSpeed, 0.001f, 0.015f);
+                ImGui.SliderFloat("###cyclespeedslide", ref this.cycleSpeed, 0.01f, 1f);
                 if (ImGui.Button("Save Settings"))
                 {
                     SaveSettings();

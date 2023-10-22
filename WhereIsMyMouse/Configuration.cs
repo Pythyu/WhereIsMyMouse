@@ -22,7 +22,7 @@ namespace WhereIsMyMouse
 
         public float Thickness = 2;
 
-        public float CycleSpeed = 0.005f;
+        public float CycleSpeed = 0.10f;
 
         public Vector4 Color = new Vector4(1, 0, 0, 1);
 
