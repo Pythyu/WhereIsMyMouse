@@ -85,12 +85,9 @@ namespace WhereIsMyMouse
                 return;
             }
 
-            if (EnableInCombatOnly)
+            if (EnableInCombatOnly && !this.condition[ConditionFlag.InCombat])
             {
-                if (!this.condition[ConditionFlag.InCombat])
-                {
-                    return;
-                }
+                return;
             }
 
             if (Rainbow)
