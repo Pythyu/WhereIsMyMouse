@@ -107,7 +107,7 @@ namespace WhereIsMyMouse
             Vector2 cursorPos = ImGui.GetMousePos();
             ImGui.SetNextWindowSize(new Vector2(300, 300));
             ImGuiHelpers.ForceNextWindowMainViewport();
-            ImGui.Begin("CursorWindow", ImGuiWindowFlags.NoBackground | ImGuiWindowFlags.NoDecoration | ImGuiWindowFlags.NoInputs);
+            ImGui.Begin("CursorWindow", ImGuiWindowFlags.NoBackground | ImGuiWindowFlags.NoDecoration | ImGuiWindowFlags.NoInputs | ImGuiWindowFlags.NoFocusOnAppearing);
             ImGui.SetWindowPos(cursorPos - new Vector2(150,150));
             
             ImDrawListPtr draw;
