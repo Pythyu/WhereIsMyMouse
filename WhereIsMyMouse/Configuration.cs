@@ -26,11 +26,5 @@ namespace WhereIsMyMouse
         public float CycleSpeed = 0.10f;
 
         public Vector4 Color = new Vector4(1, 0, 0, 1);
-
-        public void Save()
-        {
-            Trace.WriteLine("saving settings");
-            Plugin.PluginInterface!.SavePluginConfig(this);
-        }
     }
 }
