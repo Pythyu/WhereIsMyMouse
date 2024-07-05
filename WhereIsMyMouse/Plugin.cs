@@ -4,6 +4,7 @@ using Dalamud.Plugin;
 using System.IO;
 using System.Reflection;
 using Dalamud.Plugin.Services;
+using static FFXIVClientStructs.FFXIV.Client.UI.UIModule.Delegates;
 
 namespace WhereIsMyMouse
 {
@@ -13,40 +14,37 @@ namespace WhereIsMyMouse
 
         private const string commandName = "/wmm";
 
-        private DalamudPluginInterface PluginInterface { get; init; }
-        private ICommandManager CommandManager { get; init; }
+        [PluginService] internal static IDalamudPluginInterface PluginInterface { get; private set; } = null!;
+        [PluginService] internal static ICommandManager CommandManager { get; private set; } = null!;
         private Configuration Configuration { get; init; }
         private PluginUI PluginUi { get; init; }
-        private ICondition Condition { get; init;  }
+        [PluginService] internal static ICondition Condition { get; private set; } = null!;
 
-        public Plugin(
-            [RequiredVersion("1.0")] DalamudPluginInterface pluginInterface,
-            [RequiredVersion("1.0")] ICommandManager commandManager,
-            [RequiredVersion("1.0")] ICondition condition)
+        public Plugin()
         {
-            this.PluginInterface = pluginInterface;
-            this.CommandManager = commandManager;
-            this.Condition = condition;
-
-            this.Configuration = this.PluginInterface.GetPluginConfig() as Configuration ?? new Configuration();
-            this.Configuration.Initialize(this.PluginInterface);
+            this.Configuration = PluginInterface.GetPluginConfig() as Configuration ?? new Configuration();
             
-            this.PluginUi = new PluginUI(this.Configuration, this.PluginInterface, this.Condition);
+            this.PluginUi = new PluginUI(this.Configuration);
 
-            this.CommandManager.AddHandler(commandName, new CommandInfo(OnCommand)
+            CommandManager.AddHandler(commandName, new CommandInfo(OnCommand)
             {
                 HelpMessage = "Open Where's my mouse setting menu"
             });
-            
-            this.PluginInterface.UiBuilder.Draw += DrawUI;
+
+
+            PluginInterface.UiBuilder.OpenConfigUi += ToggleUI;
+            PluginInterface.UiBuilder.Draw += Draw;
         }
 
         public void Dispose()
         {
             // Save config
             PluginInterface.SavePluginConfig(this.Configuration);
-            this.PluginInterface.UiBuilder.Draw -= DrawUI;
-            this.CommandManager.RemoveHandler(commandName);
+
+            PluginInterface.UiBuilder.OpenConfigUi -= ToggleUI;
+            PluginInterface.UiBuilder.Draw -= Draw;
+
+            CommandManager.RemoveHandler(commandName);
             this.PluginUi.Dispose();
         }
 
@@ -56,10 +54,14 @@ namespace WhereIsMyMouse
             this.PluginUi.Visible = true;
         }
 
-        private void DrawUI()
+        private void Draw()
         {
             this.PluginUi.Draw();
         }
-        
+
+        private void ToggleUI()
+        {
+            this.PluginUi.ToggleUI();
+        }
     }
 }

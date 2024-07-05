@@ -1,6 +1,7 @@
 ﻿using Dalamud.Configuration;
 using Dalamud.Plugin;
 using System;
+using System.Diagnostics;
 using System.Numerics;
 
 namespace WhereIsMyMouse
@@ -25,20 +26,5 @@ namespace WhereIsMyMouse
         public float CycleSpeed = 0.10f;
 
         public Vector4 Color = new Vector4(1, 0, 0, 1);
-
-        // the below exist just to make saving less cumbersome
-
-        [NonSerialized]
-        private DalamudPluginInterface? pluginInterface;
-
-        public void Initialize(DalamudPluginInterface pluginInterface)
-        {
-            this.pluginInterface = pluginInterface;
-        }
-
-        public void Save()
-        {
-            this.pluginInterface!.SavePluginConfig(this);
-        }
     }
 }

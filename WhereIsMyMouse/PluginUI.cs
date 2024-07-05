@@ -11,9 +11,7 @@ using Dalamud.IoC;
 using Dalamud.Plugin;
 using Dalamud.Plugin.Services;
 using FFXIVClientStructs.FFXIV.Client.Game.UI;
-using FFXIVClientStructs.Interop.Attributes;
 using Lumina;
-using Character = Dalamud.Game.ClientState.Objects.Types.Character;
 using StructsCharacter = FFXIVClientStructs.FFXIV.Client.Game.Character.Character;
 
 namespace WhereIsMyMouse
@@ -23,8 +21,6 @@ namespace WhereIsMyMouse
     class PluginUI : IDisposable
     {
         private Configuration configuration;
-        
-        private DalamudPluginInterface wmmInterface;
 
         // this extra bool exists for ImGui, since you can't ref a property
         private bool visible = false;
@@ -44,8 +40,6 @@ namespace WhereIsMyMouse
         private float cycleSpeed = 0.10f;
 
         private Vector4 color = new Vector4(1, 0, 0, 1);
- 
-        private ICondition condition { get; init;  }
         
         public bool Visible
         {
@@ -53,11 +47,9 @@ namespace WhereIsMyMouse
             set { this.visible = value; }
         }
         
-        public PluginUI(Configuration configuration, DalamudPluginInterface wmmInterface, ICondition condition)
+        public PluginUI(Configuration configuration)
         {
             this.configuration = configuration;
-            this.wmmInterface = wmmInterface;
-            this.condition = condition;
             this.thickness = this.configuration.Thickness;
             this.color = this.configuration.Color;
             this.size = this.configuration.Size;
@@ -74,8 +66,13 @@ namespace WhereIsMyMouse
 
         public void Draw()
         {
-            DrawMainWindow();
             CursorAura();
+            DrawMainWindow();
+        }
+
+        public void ToggleUI()
+        {
+            Visible = !Visible;
         }
 
         public void CursorAura()
@@ -85,7 +82,7 @@ namespace WhereIsMyMouse
                 return;
             }
 
-            if (EnableInCombatOnly && !this.condition[ConditionFlag.InCombat])
+            if (EnableInCombatOnly && !Plugin.Condition[ConditionFlag.InCombat])
             {
                 return;
             }
@@ -127,7 +124,7 @@ namespace WhereIsMyMouse
             this.configuration.ForegroundCursor = this.ForegroundCursor;
             this.configuration.EnableInCombatOnly = this.EnableInCombatOnly;
             this.configuration.Rainbow = this.Rainbow;
-            wmmInterface.SavePluginConfig(this.configuration);
+            Plugin.PluginInterface.SavePluginConfig(this.configuration);
         }
         
 
