@@ -1,4 +1,4 @@
-﻿using ImGuiNET;
+using Dalamud.Bindings.ImGui;
 using System;
 using System.Drawing;
 using System.Numerics;
@@ -89,13 +89,15 @@ namespace WhereIsMyMouse
 
             if (Rainbow)
             {
-                ImGui.ColorConvertRGBtoHSV(color.X, color.Y, color.Z, out float h, out float s, out float v);
+                float h = 0, s = 0, v = 0;
+                float outr = 0, outg = 0, outb = 0;
+                ImGui.ColorConvertRGBtoHSV(color.X, color.Y, color.Z, ref h, ref s, ref v);
                 if (h >= 1)
                 {
                     h = 0;
                 }
                 h += cycleSpeed * ImGui.GetIO().DeltaTime;
-                ImGui.ColorConvertHSVtoRGB(h, s, v, out float outr, out float outg, out float outb);
+                ImGui.ColorConvertHSVtoRGB(h, s, v, ref outr, ref outg, ref outb);
                 color.X = outr;
                 color.Y = outg;
                 color.Z = outb;
