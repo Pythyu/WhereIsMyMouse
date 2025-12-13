@@ -1,67 +1,73 @@
 ﻿using Dalamud.Game.Command;
 using Dalamud.IoC;
 using Dalamud.Plugin;
-using System.IO;
-using System.Reflection;
 using Dalamud.Plugin.Services;
-using static FFXIVClientStructs.FFXIV.Client.UI.UIModule.Delegates;
+using Dalamud.Interface.Windowing;
 
-namespace WhereIsMyMouse
+namespace WhereIsMyMouse;
+
+public sealed class Plugin : IDalamudPlugin
 {
-    public sealed class Plugin : IDalamudPlugin
+    [PluginService] internal static IDalamudPluginInterface PluginInterface { get; private set; } = null!;
+    [PluginService] internal static ICommandManager CommandManager { get; private set; } = null!;
+    [PluginService] internal static ICondition Condition { get; private set; } = null!;
+
+    private const string CommandName = "/wmm";
+
+    public Configuration Configuration { get; init;  }
+
+    private readonly WindowSystem _windowSystem = new("WheresMyMouse");
+    private ConfigWindow ConfigWindow { get; init; }
+    private MouseWindow MouseWindow { get; init; }
+
+    public Plugin()
     {
-        public string Name => "Where's my mouse";
-
-        private const string commandName = "/wmm";
-
-        [PluginService] internal static IDalamudPluginInterface PluginInterface { get; private set; } = null!;
-        [PluginService] internal static ICommandManager CommandManager { get; private set; } = null!;
-        private Configuration Configuration { get; init; }
-        private PluginUI PluginUi { get; init; }
-        [PluginService] internal static ICondition Condition { get; private set; } = null!;
-
-        public Plugin()
-        {
-            this.Configuration = PluginInterface.GetPluginConfig() as Configuration ?? new Configuration();
+        Configuration = PluginInterface.GetPluginConfig() as Configuration ?? new Configuration();
             
-            this.PluginUi = new PluginUI(this.Configuration);
+        MouseWindow = new MouseWindow(this);
 
-            CommandManager.AddHandler(commandName, new CommandInfo(OnCommand)
-            {
-                HelpMessage = "Open Where's my mouse setting menu"
-            });
-
-
-            PluginInterface.UiBuilder.OpenConfigUi += ToggleUI;
-            PluginInterface.UiBuilder.Draw += Draw;
-        }
-
-        public void Dispose()
+        ConfigWindow = new ConfigWindow(this);
+        CommandManager.AddHandler(CommandName, new CommandInfo(OnCommand)
         {
-            // Save config
-            PluginInterface.SavePluginConfig(this.Configuration);
+            HelpMessage = "Open Where's my mouse setting menu"
+        });
 
-            PluginInterface.UiBuilder.OpenConfigUi -= ToggleUI;
-            PluginInterface.UiBuilder.Draw -= Draw;
+        _windowSystem.AddWindow(ConfigWindow);
 
-            CommandManager.RemoveHandler(commandName);
-            this.PluginUi.Dispose();
-        }
-
-        private void OnCommand(string command, string args)
-        {
-            // in response to the slash command, just display our main ui
-            this.PluginUi.Visible = true;
-        }
-
-        private void Draw()
-        {
-            this.PluginUi.Draw();
-        }
-
-        private void ToggleUI()
-        {
-            this.PluginUi.ToggleUI();
-        }
+        PluginInterface.UiBuilder.OpenConfigUi += ToggleConfigUi;
+        PluginInterface.UiBuilder.OpenMainUi += ToggleConfigUi;
+        PluginInterface.UiBuilder.Draw += _windowSystem.Draw;
+        PluginInterface.UiBuilder.Draw += Draw;
     }
+
+    public void Dispose()
+    {
+        // Save config
+        PluginInterface.SavePluginConfig(Configuration);
+
+        PluginInterface.UiBuilder.OpenConfigUi -= ToggleConfigUi;
+        PluginInterface.UiBuilder.OpenMainUi -= ToggleConfigUi;
+        PluginInterface.UiBuilder.Draw -= _windowSystem.Draw;
+        PluginInterface.UiBuilder.Draw -= Draw;
+
+        _windowSystem.RemoveAllWindows();
+
+        ConfigWindow.Dispose();
+        MouseWindow.Dispose();
+
+        CommandManager.RemoveHandler(CommandName);
+    }
+
+    private void OnCommand(string command, string args)
+    {
+        // in response to the slash command, just display our main ui
+        ConfigWindow.Toggle();
+    }
+
+    private void Draw()
+    {
+        MouseWindow.Draw();
+    }
+
+    private void ToggleConfigUi() => ConfigWindow.Toggle();
 }

@@ -1,30 +1,25 @@
 ﻿using Dalamud.Configuration;
-using Dalamud.Plugin;
 using System;
-using System.Diagnostics;
 using System.Numerics;
 
-namespace WhereIsMyMouse
+namespace WhereIsMyMouse;
+
+[Serializable]
+public class Configuration : IPluginConfiguration
 {
-    [Serializable]
-    public class Configuration : IPluginConfiguration
+    public int Version { get; set; } = 0;
+
+    public bool CursorOn { get; set; }
+    public bool ForegroundCursor { get; set; }
+    public bool EnableInCombatOnly { get; set; }
+    public bool Rainbow { get; set; }
+    public float Size { get; set; } = 15;
+    public float Thickness { get; set; } = 2;
+    public float CycleSpeed { get; set; } = 0.10f;
+    public Vector4 Color { get; set; } = new(1, 0, 0, 1);
+
+    public void Save()
     {
-        public int Version { get; set; } = 0;
-
-        public bool CursorOn = false;
-
-        public bool ForegroundCursor = false;
-        
-        public bool EnableInCombatOnly = false;
-
-        public bool Rainbow = false;
-
-        public float Size = 15;
-
-        public float Thickness = 2;
-
-        public float CycleSpeed = 0.10f;
-
-        public Vector4 Color = new Vector4(1, 0, 0, 1);
+        Plugin.PluginInterface.SavePluginConfig(this);
     }
 }
