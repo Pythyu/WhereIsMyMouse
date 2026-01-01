@@ -3,7 +3,7 @@
   <PropertyGroup>
     <Authors>Marethyu</Authors>
     <Company></Company>
-    <Version>0.0.1.4</Version>
+    <Version>0.0.1.5</Version>
     <Description>Never lose track of your mouse again</Description>
     <Copyright></Copyright>
     <PackageProjectUrl>https://github.com/Pythyu/WhereIsMyMouse</PackageProjectUrl>
